@@ -8,8 +8,10 @@ project( matchine )
 
 if( CMAKE_PROJECT_NAME STREQUAL "matchine" )
     option( MATCHINE_TESTS "Build matchine tests" ON )
+    option( MATCHINE_DEMOS "Build matchine demos" ON )
 else()
     option( MATCHINE_TESTS "Build matchine tests" OFF )
+    option( MATCHINE_DEMOS "Build matchine demos" OFF )
 endif()
 
 
@@ -29,6 +31,19 @@ find_package( Nonius QUIET )
 add_library( matchine INTERFACE )
 target_compile_features( matchine INTERFACE cxx_std_14 )
 target_include_directories( matchine INTERFACE include )
+
+
+# ------------------------------------------------------------------------------
+# DEMOS
+# ------------------------------------------------------------------------------
+
+if( MATCHINE_TESTS )
+
+    add_executable( demo_match_any demos/match_any.cpp )
+    set_target_properties( demo_match_any PROPERTIES CXX_STANDARD 17 )
+    target_link_libraries( demo_match_any PRIVATE matchine )
+
+endif()
 
 
 # ------------------------------------------------------------------------------
