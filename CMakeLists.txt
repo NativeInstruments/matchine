@@ -40,6 +40,7 @@ if( MATCHINE_TESTS )
     set(files_test
         tests/main.cpp
         tests/match.test.cpp
+        tests/match_any.test.cpp
         tests/meta.test.cpp
         tests/overload.test.cpp
         tests/signature.test.cpp
@@ -47,7 +48,7 @@ if( MATCHINE_TESTS )
     )
 
     add_executable( matchine_tests ${files_test} )
-    set_target_properties( matchine_tests PROPERTIES CXX_STANDARD 14 )
+    set_target_properties( matchine_tests PROPERTIES CXX_STANDARD 17 )
     target_link_libraries( matchine_tests PRIVATE matchine gtest )
 
 endif()
