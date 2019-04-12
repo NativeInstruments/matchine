@@ -46,6 +46,10 @@ if( MATCHINE_TESTS )
     set_target_properties( demo_match_any PROPERTIES CXX_STANDARD 17 )
     target_link_libraries( demo_match_any PRIVATE matchine )
 
+    add_executable( demo_overload demos/overload.cpp )
+    set_target_properties( demo_overload PROPERTIES CXX_STANDARD 17 )
+    target_link_libraries( demo_overload PRIVATE matchine )
+
 endif()
 
 
