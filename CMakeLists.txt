@@ -39,6 +39,9 @@ target_include_directories( matchine INTERFACE include )
 
 if( MATCHINE_TESTS )
 
+    add_executable( demo_match_polyobj demos/match_polyobj.cpp )
+    target_link_libraries( demo_match_polyobj PRIVATE matchine )
+
     add_executable( demo_match_any demos/match_any.cpp )
     set_target_properties( demo_match_any PROPERTIES CXX_STANDARD 17 )
     target_link_libraries( demo_match_any PRIVATE matchine )
