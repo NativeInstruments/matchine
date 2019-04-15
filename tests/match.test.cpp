@@ -149,7 +149,7 @@ TEST( ni_match, match_with_otherwise_value )
 
     static_assert(
         std::is_same<decltype(f(d1)), int>::value,
-        "When using 'otherwise' the resul type must be int."
+        "When using 'otherwise' the result type must be int."
     );
 
     EXPECT_EQ( 1337 + 1, f(static_cast<base&>(d1)) );
@@ -179,4 +179,44 @@ TEST( ni_match, otherwise_value_can_be_at_any_position )
     EXPECT_EQ( 1337 + 1, f(static_cast<base&>(d1)) );
     EXPECT_EQ( 7357 + 2, f(static_cast<base&>(d2)) );
     EXPECT_EQ( -1, f(static_cast<base&>(d3)) );
+}
+
+//----------------------------------------------------------------------------------------------------------------------
+
+namespace ni_match_test_detail
+{
+    struct AnyNumber
+    {
+        enum Tag { VOID, INT, FLOAT };
+        union { int i_; float f_; };
+        Tag tag = VOID;
+
+        AnyNumber() = default;
+        AnyNumber(int i) : i_{i} , tag{INT} {}
+        AnyNumber(float f) : f_{f} , tag{FLOAT} {}
+
+        operator int*()               { return tag == INT ? &i_ : nullptr; }
+        operator float*()             { return tag == FLOAT ? &f_ : nullptr; }
+        operator int const*() const   { return tag == INT ? &i_ : nullptr; }
+        operator float const*() const { return tag == FLOAT ? &f_ : nullptr; }
+    };
+
+    template <typename TargetType>
+    TargetType* dyn_cast(AnyNumber* n) { return (TargetType*)(*n); }
+
+    template <typename TargetType>
+    TargetType const* dyn_cast(AnyNumber const* n) { return (TargetType const*)(*n); }
+}
+
+TEST( ni_match, match_on_rvalues )
+{
+    using ni_match_test_detail::AnyNumber;
+
+    auto get_int = []{ return AnyNumber{1337}; };
+    auto get_float = []{ return AnyNumber{3.14f}; };
+
+    EXPECT_TRUE(ni::match(get_int())([](int& i){ EXPECT_EQ(1337, i); } ));
+    EXPECT_TRUE(ni::match(get_float())([](float& f){ EXPECT_EQ(3.14f, f); } ));
+    EXPECT_TRUE(ni::match(get_int())([](int const& i){ EXPECT_EQ(1337, i); } ));
+    EXPECT_TRUE(ni::match(get_float())([](float const& f){ EXPECT_EQ(3.14f, f); } ));
 }

@@ -249,9 +249,18 @@ namespace ni
 
 
     template <typename Type>
+    auto match(Type&& x)
+    {
+        return [x=std::move(x)](auto&&... lambdas) mutable -> decltype(auto)
+        {
+            return ::ni::matcher(std::forward<decltype(lambdas)>(lambdas)...)(x);
+        };
+    }
+
+    template <typename Type>
     auto match(Type& x)
     {
-        return [&x](auto&&... lambdas)
+        return [&x](auto&&... lambdas) mutable -> decltype(auto)
         {
             return ::ni::matcher(std::forward<decltype(lambdas)>(lambdas)...)(x);
         };
