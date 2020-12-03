@@ -128,7 +128,7 @@ namespace type_hierarchy_detail {
 
     // the types 'type<>' manage the ids which are used by identify each type at runtime
 
-    template <typename Config, typename... >
+    template <typename Config, typename... T>
     struct id_holder;
 
     template <typename Config>
